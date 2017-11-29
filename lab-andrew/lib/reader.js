@@ -7,17 +7,14 @@ const fs = require('fs');
 reader.readTxts = (arr, callback) => {
   if (!Array.isArray(arr)) throw new TypeError('arr must be an Array');
   const fileArr = [];
-  const catPath = `${__dirname}/../assets/${arr[0]}`;
-  const dogPath = `${__dirname}/../assets/${arr[1]}`;
-  const fishPath = `${__dirname}/../assets/${arr[2]}`;
-  fs.readFile(catPath, (error, data) => {
-    if (error) callback(error);
+  fs.readFile(arr[0], (error, data) => {
+    if (error) return callback(error);
     fileArr.push(data.toString());
-    fs.readFile(dogPath, (error, data) => {
-      if (error) callback(error);
+    fs.readFile(arr[1], (error, data) => {
+      if (error) return callback(error);
       fileArr.push(data.toString());
-      fs.readFile(fishPath, (error, data) => {
-        if (error) callback(error);
+      fs.readFile(arr[2], (error, data) => {
+        if (error) return callback(error);
         fileArr.push(data.toString());
         callback(null, fileArr);
       });
@@ -25,6 +22,17 @@ reader.readTxts = (arr, callback) => {
   });
 };
 
-reader.recursivRead = () => {
-
+reader.fileArr = [];
+reader.recursiveRead = (arr, callback) => {
+  if (!Array.isArray(arr)) throw new TypeError('arr must be an Array');
+  if (arr.length > 0) {
+    let currentPath = arr.splice(0, 1)[0];
+    fs.readFile(currentPath, (error, data) => {
+      if (error) return callback(error);
+      reader.fileArr.push(data.toString());
+      reader.recursiveRead(arr, callback);
+    });
+  } else {
+    callback(null, reader.fileArr);
+  }
 };
