@@ -4,6 +4,7 @@ const reader = module.exports = {};
 
 const fs = require('fs');
 
+// Non-recursive method
 reader.readTxts = (arr, callback) => {
   if (!Array.isArray(arr)) throw new TypeError('arr must be an Array');
   const fileArr = [];
@@ -22,6 +23,7 @@ reader.readTxts = (arr, callback) => {
   });
 };
 
+// Recursive method
 reader.fileArr = [];
 reader.recursiveRead = (arr, callback) => {
   if (!Array.isArray(arr)) throw new TypeError('arr must be an Array');
